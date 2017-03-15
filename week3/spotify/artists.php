@@ -6,6 +6,16 @@
 	else{
 		header('Location: login.php');
 	}
+		/*$con = new mysqli("localhost","root","","spotify");
+		$query = "SELECT * FROM artists;";
+		$result = $con->query($query);
+		while( $row = mysqli_fetch_array($result) ){
+			echo "<a href='http://localhost/lesweek3/exercise/albums.php?artistid=".$row['id']."'><div class='artists'><div class='photo'></div><p class='artisname'>".$row['name']."</p></div></a>";
+		}*/
+		$conn = new PDO('mysql:host=localhost;dbname=spotify', "root", "");
+		$sth = $conn->prepare("SELECT * FROM artists;");
+		// Or sth->bindParam(':name', $_POST['namefromform']); depending on application
+		$sth->execute();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -68,21 +78,10 @@
 <a href="login.php?logout=true"><div class="logout"><p>Log Out</p></div></a>
 <div class="container">
 	<!--<div class="artists"><div class="photo"></div><p class="artisname"></p></div>-->
-	<?php
-		/*$con = new mysqli("localhost","root","","spotify");
-		$query = "SELECT * FROM artists;";
-		$result = $con->query($query);
-		while( $row = mysqli_fetch_array($result) ){
-			echo "<a href='http://localhost/lesweek3/exercise/albums.php?artistid=".$row['id']."'><div class='artists'><div class='photo'></div><p class='artisname'>".$row['name']."</p></div></a>";
-		}*/
-		$conn = new PDO('mysql:host=localhost;dbname=spotify', "root", "");
-		$sth = $conn->prepare("SELECT * FROM artists;");
-		// Or sth->bindParam(':name', $_POST['namefromform']); depending on application
-		$sth->execute();
-		while( $row = $sth->fetch() ){
-			echo "<a href='albums.php?artistid=".$row['id']."'><div class='artists'><div class='photo'></div><p class='artisname'>".$row['name']."</p></div></a>";
-		}
-	?>
+	<?php while( $row = $sth->fetch() ):?>
+			<a href='albums.php?artistid=<?php echo $row['id'] ?>'><div class='artists'><div class='photo'></div><p class='artisname'><?php echo $row['name'] ?></p></div></a>
+		
+	<?php endwhile; ?>
 </div>
 </body>
 </html>
