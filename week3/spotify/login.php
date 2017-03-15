@@ -6,8 +6,6 @@
 			session_destroy();
 		}
 		}
-	?>
-<?php
     //is er gepost
     if(!empty($_POST)){
         //is alles ingevuld

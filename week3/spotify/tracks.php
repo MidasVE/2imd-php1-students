@@ -7,6 +7,26 @@
 	else{
 		header('Location: login.php');
 	}
+		/*$con = new mysqli("localhost","root","","spotify");
+		$query = "SELECT * FROM albums WHERE (id = '".$albumid."');";
+		$result = $con->query($query);
+		$res = $result->fetch_assoc();
+		echo "<div class='artists'><img class='photo' src='".$res['cover']."' alt='cover'><p class='artisname'>".$res['title']."</p></div>";
+		$query2 = "SELECT * FROM tracks where(album_id='".$albumid."');";
+		$result2 = $con->query($query2);
+		while( $row = mysqli_fetch_array($result2) ){
+			echo"<p>".$row['title']."</p>";
+		}*/
+		$conn = new PDO('mysql:host=localhost;dbname=spotify', "root", "");
+		$sth = $conn->prepare("SELECT * FROM albums WHERE id = :id;");
+		$sth->bindParam(':id', $albumid);
+		// Or sth->bindParam(':name', $_POST['namefromform']); depending on application
+		$sth->execute();
+		$res = $sth->fetch();
+		$sth2 = $conn->prepare("SELECT * FROM tracks WHERE album_id = :id;");
+		$sth2->bindParam(':id', $albumid);
+		// Or sth->bindParam(':name', $_POST['namefromform']); depending on application
+		$sth2->execute();
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -72,27 +92,8 @@
 <div class="container">
 	<!--<div class="artists"><div class="photo"></div><p class="artisname"></p></div>-->
 	<?php
-		/*$con = new mysqli("localhost","root","","spotify");
-		$query = "SELECT * FROM albums WHERE (id = '".$albumid."');";
-		$result = $con->query($query);
-		$res = $result->fetch_assoc();
+
 		echo "<div class='artists'><img class='photo' src='".$res['cover']."' alt='cover'><p class='artisname'>".$res['title']."</p></div>";
-		$query2 = "SELECT * FROM tracks where(album_id='".$albumid."');";
-		$result2 = $con->query($query2);
-		while( $row = mysqli_fetch_array($result2) ){
-			echo"<p>".$row['title']."</p>";
-		}*/
-		$conn = new PDO('mysql:host=localhost;dbname=spotify', "root", "");
-		$sth = $conn->prepare("SELECT * FROM albums WHERE id = :id;");
-		$sth->bindParam(':id', $albumid);
-		// Or sth->bindParam(':name', $_POST['namefromform']); depending on application
-		$sth->execute();
-		$res = $sth->fetch();
-		echo "<div class='artists'><img class='photo' src='".$res['cover']."' alt='cover'><p class='artisname'>".$res['title']."</p></div>";
-		$sth2 = $conn->prepare("SELECT * FROM tracks WHERE album_id = :id;");
-		$sth2->bindParam(':id', $albumid);
-		// Or sth->bindParam(':name', $_POST['namefromform']); depending on application
-		$sth2->execute();
 		while( $row = $sth2->fetch() ){
 			echo"<p>".$row['title']."</p>";
 		}
